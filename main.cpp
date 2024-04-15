@@ -1,14 +1,8 @@
 #include "iostream"
+#include "GeneralFunctions.h"
 #include "Define.cpp"
 
 using namespace std;
-
-bool isBoardCorrect(int red, int blue) {
-    if (red == blue + 1 || red == blue)
-        return true;
-    else
-        return false;
-}
 
 int main() {
     char cell[CELL_SIZE], command[4];
@@ -47,7 +41,7 @@ int main() {
                             else if (command[0] == 'I' && command[3] == 'B')
                                 cmd = IS_BOARD_CORRECT;
                             else if (command[0] == 'I' && command[3] == 'G')
-                                cmd = IS_BOARD_CORRECT;
+                                cmd = IS_GAME_OVER;
                             boardBeg = false;
                         }
                     } else
@@ -90,24 +84,7 @@ int main() {
                     boardSize = rowLength;
             }
         }
-
-        if (cmd != -1) {
-            if (cmd == BOARD_SIZE)
-                cout << boardSize << endl;
-            else if (cmd == PAWNS_NUMBER)
-                cout << redPawns + bluePawns << endl;
-            else if (cmd == IS_BOARD_CORRECT) {
-                if (isBoardCorrect(redPawns, bluePawns))
-                    cout << "YES" << endl;
-                else
-                    cout << "NO" << endl;
-            }
-            cmd = -1;
-            redPawns = 0;
-            bluePawns = 0;
-        }
-
+        handleCommands(cmd,boardSize,redPawns,bluePawns);
     }
-
     return 0;
 }
