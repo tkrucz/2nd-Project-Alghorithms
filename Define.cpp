@@ -6,9 +6,9 @@
 #define GREATER_SIGN 62
 #define BLUE_PAWN 98
 #define RED_PAWN 114
+#define MAX_BOARD_LENGTH 11
 
-
-enum COMMANDS{
+enum COMMANDS {
     BOARD_SIZE,
     PAWNS_NUMBER,
     IS_BOARD_CORRECT,
