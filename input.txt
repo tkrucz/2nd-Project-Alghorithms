@@ -16,7 +16,7 @@ IS_GAME_OVER
 IS_GAME_OVER
 
     ---
- --<   >--
+ --< b >--
 <   >-< r >
  --<   >--
     ---
