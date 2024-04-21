@@ -17,7 +17,7 @@ int main() {
     bool inCell = false;
 
     char boardTmp[MAX_BOARD_LENGTH][MAX_BOARD_LENGTH];
-    int rowCounter = 0;
+    int rowCounter = 0; //numbers of rows
     int xIndex = 0, yIndex = 0;
     bool endOfMiddleRow = false;
     bool boardTableFilled = false;
@@ -71,8 +71,9 @@ int main() {
                         yIndex = rowCounter;
                         if (endOfMiddleRow) {
                             yIndex = boardSize - 1;
-                            xIndex = boardSize - 1;
-                        } else
+                            xIndex = rowCounter - boardSize + 1;
+                        }
+                        else
                             xIndex = 0;
                     } else if (next2 == SMALL_SIGN)
                         inCell = true; //End of "break" cell
@@ -81,6 +82,7 @@ int main() {
                     yIndex = rowCounter;
                     xIndex = 1;
                     endOfMiddleRow = true;
+                    rowCounter ++;
                 }
             }
         } else {
