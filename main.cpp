@@ -72,8 +72,7 @@ int main() {
                         if (endOfMiddleRow) {
                             yIndex = boardSize - 1;
                             xIndex = rowCounter - boardSize + 1;
-                        }
-                        else
+                        } else
                             xIndex = 0;
                     } else if (next2 == SMALL_SIGN)
                         inCell = true; //End of "break" cell
@@ -82,7 +81,7 @@ int main() {
                     yIndex = rowCounter;
                     xIndex = 1;
                     endOfMiddleRow = true;
-                    rowCounter ++;
+                    rowCounter++;
                 }
             }
         } else {
@@ -115,7 +114,10 @@ int main() {
                 cellIndex = 0;
             }
         }
-        char board[boardSize][boardSize]; //final board
+        char **board = new char *[boardSize];
+        for (int i = 0; i < boardSize; i++)
+            board[i] = new char[boardSize];
+
         if (!boardBeg && boardSize != 0 && !boardTableFilled) {
             for (int i = 0; i < boardSize; i++) {
                 for (int j = 0; j < boardSize; j++)
@@ -123,7 +125,7 @@ int main() {
             }
             boardTableFilled = true;
         }
-        handleCommands(cmd, boardSize, redPawns, bluePawns);
+        handleCommands(board, cmd, boardSize, redPawns, bluePawns);
     }
     return 0;
 }

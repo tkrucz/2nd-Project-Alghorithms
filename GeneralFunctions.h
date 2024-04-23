@@ -23,7 +23,7 @@ bool isGameOver(char **board, int boardSize);
 
 void isGameOverOutput(char **board, int boardSize, int redPawns, int bluePawns);
 
-void handleCommands(int &cmd, int &boardSize, int &redPawns, int &bluePawns);
+void handleCommands(char **board, int &cmd, int &boardSize, int &redPawns, int &bluePawns);
 
 bool checkPath(char ** board, int boardSize, Position beginning);
 
