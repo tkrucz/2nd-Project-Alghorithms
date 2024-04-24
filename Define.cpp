@@ -8,6 +8,8 @@
 #define RED_PAWN 114
 #define MAX_BOARD_LENGTH 11
 
+#define DEBUG
+
 enum COMMANDS {
     BOARD_SIZE,
     PAWNS_NUMBER,

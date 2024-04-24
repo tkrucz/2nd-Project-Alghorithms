@@ -17,15 +17,17 @@ int main() {
     bool inCell = false;
 
     char boardTmp[MAX_BOARD_LENGTH][MAX_BOARD_LENGTH];
-    int rowCounter = 0; //numbers of rows
+    int rowCounter = 0; //numbers of board rows
     int xIndex = 0, yIndex = 0;
     bool endOfMiddleRow = false;
     bool boardTableFilled = false;
 
+    int staticCount = 0;
+
     // Read characters until end of input
     while ((tmp = getchar()) != EOF) {
         if (!inCell) {
-            // Check if starting a new cell
+            // Check if symbol is starting a new cell
             if (tmp == SMALL_SIGN) {
                 inCell = true;
                 cellIndex = 0;
@@ -33,9 +35,9 @@ int main() {
             } else if (tmp == MINUS) {
                 char next1 = getchar();
                 char next2 = getchar();
-                //Beginning or ending of boardTmp
+                // Beginning or ending of boardTmp
                 if (next1 == MINUS && next2 == MINUS) {
-                    if (boardBeg) {
+                    if (boardBeg) { // Ending of board
                         tmp = getchar();
                         if (tmp == ENTER) {
                             while ((tmp = getchar()) != ENTER && commandIndex != 4)
@@ -51,22 +53,22 @@ int main() {
                             boardBeg = false;
                             endOfMiddleRow = false;
                             xIndex = 0;
-                            rowCounter = 0;
                             yIndex = 0;
+                            rowCounter = 0;
                         }
-                    } else {
+                    } else { // Beginning of board
                         boardBeg = true;
                         boardTableFilled = false;
+                        staticCount++;
                     }
-                    //Beginning of row
-                } else if (next1 == MINUS && next2 == SMALL_SIGN)
+                } else if (next1 == MINUS && next2 == SMALL_SIGN) // Beginning of row
                     inCell = true;
             } else if (tmp == GREATER_SIGN) {
                 char next1 = getchar();
                 if (next1 == MINUS) {
                     char next2 = getchar();
                     if (next2 == MINUS) {
-                        rowLength = 0; //End of row
+                        rowLength = 0; // End of row
                         rowCounter++;
                         yIndex = rowCounter;
                         if (endOfMiddleRow) {
@@ -85,14 +87,14 @@ int main() {
                 }
             }
         } else {
-            //Beginning of the cell
+            // Beginning of the cell
             if (cell[0] == SMALL_SIGN && cellIndex == 1 && tmp == SPACE) {
                 cellIndex = 0;
                 cell[cellIndex++] = tmp;
-            } else {
+            } else { // Provide next elements into cell
                 cell[cellIndex++] = tmp;
             }
-            if (cellIndex == CELL_SIZE) {
+            if (cellIndex == CELL_SIZE) { // If cell contains 3 elements
 
                 if (cell[1] == BLUE_PAWN || cell[1] == RED_PAWN || cell[1] == SPACE) {
                     boardTmp[xIndex++][yIndex--] = cell[1];
@@ -114,18 +116,37 @@ int main() {
                 cellIndex = 0;
             }
         }
-        char **board = new char *[boardSize];
-        for (int i = 0; i < boardSize; i++)
-            board[i] = new char[boardSize];
 
-        if (!boardBeg && boardSize != 0 && !boardTableFilled) {
-            for (int i = 0; i < boardSize; i++) {
-                for (int j = 0; j < boardSize; j++)
-                    board[i][j] = boardTmp[i][j];
+        if (!boardBeg) {
+            char **board = new char *[boardSize]; // Array which represents board
+            for (int i = 0; i < boardSize; i++)
+                board[i] = new char[boardSize];
+
+            bool **visited = new bool *[boardSize]; // Array which represent status of pawns
+            for (int i = 0; i < boardSize; i++)
+                visited[i] = new bool[boardSize];
+
+            if (boardSize != 0 && !boardTableFilled) {
+                for (int i = 0; i < boardSize; i++) {
+                    for (int j = 0; j < boardSize; j++)
+                        board[i][j] = boardTmp[i][j];
+                }
+                boardTableFilled = true;
             }
-            boardTableFilled = true;
+
+            handleCommands(board, visited, cmd, boardSize, redPawns, bluePawns);
+
+            for (int i = 0; i < boardSize; i++) {
+                delete board[i];
+            }
+            delete[] board;
+
+            for (int i = 0; i < boardSize; i++) {
+                delete visited[i];
+            }
+            delete[] visited;
         }
-        handleCommands(board, cmd, boardSize, redPawns, bluePawns);
     }
+
     return 0;
 }

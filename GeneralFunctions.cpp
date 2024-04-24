@@ -21,49 +21,59 @@ void isBoardCorrectOutput(int redPawns, int bluePawns) {
         cout << "NO" << endl;
 }
 
-bool isGameOverRed(char **board, int boardSize) {
+bool isGameOverRed(char **board, bool **visited, int boardSize) {
+//#ifdef DEBUG
+//    for (int i = 0; i < boardSize; ++i) {
+//        for (int j = 0; j < boardSize; ++j) {
+//            if (board[i][j] == ' ')
+//                cout << '_';
+//            else
+//                cout << board[i][j];
+//        }
+//        cout << endl;
+//    }
+//#endif
     for (int j = 0; j < boardSize; j++) {
-        if (board[j][0] == 'r')
-            if (checkPath(board, boardSize, {j, 0}))
+        if (board[0][j] == 'r')
+            if (checkPath(board, visited, boardSize, {0, j}))
                 return true;
     }
     return false;
 }
 
-bool isGameOverBlue(char **board, int boardSize) {
+bool isGameOverBlue(char **board, bool **visited, int boardSize) {
     for (int j = 0; j < boardSize; j++) {
-        if (board[0][j] == 'b')
-            if (checkPath(board, boardSize, {0, j}))
+        if (board[j][0] == 'b')
+            if (checkPath(board, visited, boardSize, {j, 0}))
                 return true;
     }
     return false;
 }
 
-bool isGameOver(char **board, int boardSize) {
-    if (isGameOverRed(board, boardSize)) {
+bool isGameOver(char **board, bool **visited, int boardSize) {
+    if (isGameOverRed(board, visited, boardSize)) {
         cout << "YES RED" << endl;
         return true;
-    } else if (isGameOverBlue(board, boardSize)) {
+    } else if (isGameOverBlue(board, visited, boardSize)) {
         cout << "YES BLUE" << endl;
         return true;
     }
     return false;
 }
 
-void isGameOverOutput(char **board, int boardSize, int redPawns, int bluePawns) {
+void isGameOverOutput(char **board, bool **visited, int boardSize, int redPawns, int bluePawns) {
     if (!isBoardCorrect(redPawns, bluePawns)) {
         cout << "NO" << endl;
     } else if (pawnNumbers(redPawns, bluePawns) == 0) {
         cout << "NO" << endl;
-    } else if (isGameOver(board, boardSize)) {
-    } else if (!isGameOver(board, boardSize)) {
+    } else if (isGameOver(board, visited, boardSize)) {}
+    else if (!isGameOver(board, visited, boardSize)) {
         cout << "NO" << endl;
-    }
-    else
+    } else
         cout << "NO - not this simple cases" << endl;
 }
 
-void handleCommands(char **board, int &cmd, int &boardSize, int &redPawns, int &bluePawns) {
+void handleCommands(char **board, bool **visited, int &cmd, int &boardSize, int &redPawns, int &bluePawns) {
     if (cmd != -1) {
         if (cmd == BOARD_SIZE)
             cout << boardSize << endl;
@@ -72,21 +82,17 @@ void handleCommands(char **board, int &cmd, int &boardSize, int &redPawns, int &
         else if (cmd == IS_BOARD_CORRECT) {
             isBoardCorrectOutput(redPawns, bluePawns);
         } else if (cmd == IS_GAME_OVER) {
-            isGameOverOutput(board, boardSize, redPawns, bluePawns);
+            isGameOverOutput(board, visited, boardSize, redPawns, bluePawns);
         }
         cmd = -1;
         redPawns = 0;
         bluePawns = 0;
-
-        for (int i = 0; i < boardSize; i++) {
-            delete board[i];
-        }
-        delete board;
+        boardSize=0;
     }
 }
 
-bool checkPath(char **board, int boardSize, Position beginning) {
-    bool visited[boardSize][boardSize];
+bool checkPath(char **board, bool **visited, int boardSize, Position beginning) {
+
 
     for (int i = 0; i < boardSize; i++) {
         for (int j = 0; j < boardSize; ++j) {
@@ -101,9 +107,10 @@ bool checkPath(char **board, int boardSize, Position beginning) {
     while (!path.empty()) {
         Position currentPosition = path.top();
         path.pop();
-        if (board[currentPosition.row][currentPosition.column] == 'r' && currentPosition.column == boardSize - 1) {
+        if (board[currentPosition.row][currentPosition.column] == 'r' && currentPosition.row == boardSize - 1) {
             return true;
-        } else if (board[currentPosition.row][currentPosition.column] == 'b' && currentPosition.row == boardSize - 1) {
+        } else if (board[currentPosition.row][currentPosition.column] == 'b' &&
+                   currentPosition.column == boardSize - 1) {
             return true;
         }
 
