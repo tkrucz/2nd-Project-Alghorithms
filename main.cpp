@@ -5,7 +5,7 @@ using namespace std;
 
 int main() {
     char cell[CELL_SIZE];
-    char tmp, command[4];
+    char tmp, command[10];
     int cellIndex = 0, commandIndex = 0;
 
     int rowLength = 0, boardSize = 0;
@@ -40,16 +40,18 @@ int main() {
                     if (boardBeg) { // Ending of board
                         tmp = getchar();
                         if (tmp == ENTER) {
-                            while ((tmp = getchar()) != ENTER && commandIndex != 4)
+                            while ((tmp = getchar()) != ENTER && commandIndex != 10)
                                 command[commandIndex++] = tmp;
                             if (command[0] == 'B')
                                 cmd = BOARD_SIZE;
                             else if (command[0] == 'P')
                                 cmd = PAWNS_NUMBER;
-                            else if (command[0] == 'I' && command[3] == 'B')
+                            else if (command[0] == 'I' && command[3] == 'B' && command[9] == 'C')
                                 cmd = IS_BOARD_CORRECT;
                             else if (command[0] == 'I' && command[3] == 'G')
                                 cmd = IS_GAME_OVER;
+                            else if (command[0] == 'I' && command[3] == 'B' && command[9] == 'P')
+                                cmd = IS_BOARD_POSSIBLE;
                             boardBeg = false;
                             endOfMiddleRow = false;
                             xIndex = 0;
