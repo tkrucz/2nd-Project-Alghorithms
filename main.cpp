@@ -5,7 +5,7 @@ using namespace std;
 
 int main() {
     char cell[CELL_SIZE];
-    char tmp, command[10];
+    char tmp, command[16];
     int cellIndex = 0, commandIndex = 0;
 
     int rowLength = 0, boardSize = 0;
@@ -22,7 +22,7 @@ int main() {
     bool endOfMiddleRow = false;
     bool boardTableFilled = false;
 
-    int staticCount = 0;
+    static int COUNT = 0;
 
     // Read characters until end of input
     while ((tmp = getchar()) != EOF) {
@@ -39,8 +39,9 @@ int main() {
                 if (next1 == MINUS && next2 == MINUS) {
                     if (boardBeg) { // Ending of board
                         tmp = getchar();
-                        if (tmp == ENTER) {
-                            while ((tmp = getchar()) != ENTER && commandIndex != 10)
+                        if (tmp == ENTER || tmp == '\r') {
+                            if (tmp == '\r') getchar();
+                            while ((tmp = getchar()) != ENTER && commandIndex != 16)
                                 command[commandIndex++] = tmp;
                             if (command[0] == 'B')
                                 cmd = BOARD_SIZE;
@@ -52,6 +53,14 @@ int main() {
                                 cmd = IS_GAME_OVER;
                             else if (command[0] == 'I' && command[3] == 'B' && command[9] == 'P')
                                 cmd = IS_BOARD_POSSIBLE;
+                            else if (command[0] == 'C' && command[4] == 'R' && command[15] == '1')
+                                cmd = CAN_RED_WIN_IN_1_MOVE_WITH_NAIVE;
+                            else if (command[0] == 'C' && command[4] == 'B' && command[15] == '1')
+                                cmd = CAN_BLUE_WIN_IN_1_MOVE_WITH_NAIVE;
+                            else if (command[0] == 'C' && command[4] == 'R' && command[15] == '2')
+                                cmd = CAN_RED_WIN_IN_2_MOVES_WITH_NAIVE;
+                            else if (command[0] == 'C' && command[4] == 'B' && command[15] == '2')
+                                cmd = CAN_BLUE_WIN_IN_2_MOVES_WITH_NAIVE;
                             boardBeg = false;
                             endOfMiddleRow = false;
                             xIndex = 0;
@@ -59,9 +68,9 @@ int main() {
                             rowCounter = 0;
                         }
                     } else { // Beginning of board
+                        COUNT++;
                         boardBeg = true;
                         boardTableFilled = false;
-                        staticCount++;
                     }
                 } else if (next1 == MINUS && next2 == SMALL_SIGN) // Beginning of row
                     inCell = true;
@@ -79,7 +88,7 @@ int main() {
                         } else
                             xIndex = 0;
                     } else if (next2 == SMALL_SIGN)
-                        inCell = true; //End of "break" cell
+                        inCell = true;
                 } else if (next1 == ENTER) { //End of middle row
                     rowLength = 0;
                     yIndex = rowCounter;
@@ -149,6 +158,5 @@ int main() {
             delete[] visited;
         }
     }
-
     return 0;
 }
