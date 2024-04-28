@@ -169,7 +169,7 @@ bool recursiveNaiveCheck(char **board, bool **visited, char tmp, int boardSize, 
 
 bool canWinNaive(char **board, bool **visited, int boardSize, int redPawns, int bluePawns, int cmd) {
     char tmp;
-    int nMoves, emptyCell = 0;
+    int nMoves = 0, emptyCell = 0;
 
     if (cmd == CAN_RED_WIN_IN_1_MOVE_WITH_NAIVE || cmd == CAN_RED_WIN_IN_2_MOVES_WITH_NAIVE)
         tmp = 'r';
@@ -220,9 +220,7 @@ void canWinNaiveOutput(char **board, bool **visited, int boardSize, int redPawns
 }
 
 void handleCommands(char **board, bool **visited, int &cmd, int &boardSize, int &redPawns, int &bluePawns) {
-    static int counterA = 0;
     if (cmd != -1) {
-        counterA += 1;
         if (cmd == BOARD_SIZE)
             cout << boardSize << endl;
         else if (cmd == PAWNS_NUMBER)
@@ -290,4 +288,33 @@ bool checkPath(char **board, bool **visited, int boardSize, Position beginning) 
         }
     }
     return false;
+}
+
+void getCommand(int &cmd) {
+    char tmp, command[16];
+    int commandIndex = 0;
+    tmp = getchar();
+    if (tmp == ENTER || tmp == '\r') {
+        if (tmp == '\r') getchar();
+        while ((tmp = getchar()) != ENTER && commandIndex != 16)
+            command[commandIndex++] = tmp;
+        if (command[0] == 'B')
+            cmd = BOARD_SIZE;
+        else if (command[0] == 'P')
+            cmd = PAWNS_NUMBER;
+        else if (command[0] == 'I' && command[3] == 'B' && command[9] == 'C')
+            cmd = IS_BOARD_CORRECT;
+        else if (command[0] == 'I' && command[3] == 'G')
+            cmd = IS_GAME_OVER;
+        else if (command[0] == 'I' && command[3] == 'B' && command[9] == 'P')
+            cmd = IS_BOARD_POSSIBLE;
+        else if (command[0] == 'C' && command[4] == 'R' && command[15] == '1')
+            cmd = CAN_RED_WIN_IN_1_MOVE_WITH_NAIVE;
+        else if (command[0] == 'C' && command[4] == 'B' && command[15] == '1')
+            cmd = CAN_BLUE_WIN_IN_1_MOVE_WITH_NAIVE;
+        else if (command[0] == 'C' && command[4] == 'R' && command[15] == '2')
+            cmd = CAN_RED_WIN_IN_2_MOVES_WITH_NAIVE;
+        else if (command[0] == 'C' && command[4] == 'B' && command[15] == '2')
+            cmd = CAN_BLUE_WIN_IN_2_MOVES_WITH_NAIVE;
+    }
 }

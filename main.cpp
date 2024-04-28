@@ -5,12 +5,13 @@ using namespace std;
 
 int main() {
     char cell[CELL_SIZE];
-    char tmp, command[16];
-    int cellIndex = 0, commandIndex = 0;
+    char tmp;
+    int cellIndex = 0;
 
-    int rowLength = 0, boardSize = 0;
+    int rowLength = 0, boardSize = 0; // Row length used to calculate boardSize
     int cmd = -1;
-    bool boardBeg = false;
+    bool boardBeg = false; // Beginning of board
+    bool haveCmd = false; // We have command
 
     int bluePawns = 0;
     int redPawns = 0;
@@ -21,8 +22,6 @@ int main() {
     int xIndex = 0, yIndex = 0;
     bool endOfMiddleRow = false;
     bool boardTableFilled = false;
-
-    static int COUNT = 0;
 
     // Read characters until end of input
     while ((tmp = getchar()) != EOF) {
@@ -35,40 +34,16 @@ int main() {
             } else if (tmp == MINUS) {
                 char next1 = getchar();
                 char next2 = getchar();
-                // Beginning or ending of boardTmp
-                if (next1 == MINUS && next2 == MINUS) {
+                if (next1 == MINUS && next2 == MINUS) { // Beginning or ending of boardTmp
                     if (boardBeg) { // Ending of board
-                        tmp = getchar();
-                        if (tmp == ENTER || tmp == '\r') {
-                            if (tmp == '\r') getchar();
-                            while ((tmp = getchar()) != ENTER && commandIndex != 16)
-                                command[commandIndex++] = tmp;
-                            if (command[0] == 'B')
-                                cmd = BOARD_SIZE;
-                            else if (command[0] == 'P')
-                                cmd = PAWNS_NUMBER;
-                            else if (command[0] == 'I' && command[3] == 'B' && command[9] == 'C')
-                                cmd = IS_BOARD_CORRECT;
-                            else if (command[0] == 'I' && command[3] == 'G')
-                                cmd = IS_GAME_OVER;
-                            else if (command[0] == 'I' && command[3] == 'B' && command[9] == 'P')
-                                cmd = IS_BOARD_POSSIBLE;
-                            else if (command[0] == 'C' && command[4] == 'R' && command[15] == '1')
-                                cmd = CAN_RED_WIN_IN_1_MOVE_WITH_NAIVE;
-                            else if (command[0] == 'C' && command[4] == 'B' && command[15] == '1')
-                                cmd = CAN_BLUE_WIN_IN_1_MOVE_WITH_NAIVE;
-                            else if (command[0] == 'C' && command[4] == 'R' && command[15] == '2')
-                                cmd = CAN_RED_WIN_IN_2_MOVES_WITH_NAIVE;
-                            else if (command[0] == 'C' && command[4] == 'B' && command[15] == '2')
-                                cmd = CAN_BLUE_WIN_IN_2_MOVES_WITH_NAIVE;
-                            boardBeg = false;
-                            endOfMiddleRow = false;
-                            xIndex = 0;
-                            yIndex = 0;
-                            rowCounter = 0;
-                        }
+                        getCommand(cmd);
+                        boardBeg = false;
+                        endOfMiddleRow = false;
+                        haveCmd = true;
+                        xIndex = 0;
+                        yIndex = 0;
+                        rowCounter = 0;
                     } else { // Beginning of board
-                        COUNT++;
                         boardBeg = true;
                         boardTableFilled = false;
                     }
@@ -87,7 +62,7 @@ int main() {
                             xIndex = rowCounter - boardSize + 1;
                         } else
                             xIndex = 0;
-                    } else if (next2 == SMALL_SIGN)
+                    } else if (next2 == SMALL_SIGN) // Skip this symbol >-<
                         inCell = true;
                 } else if (next1 == ENTER) { //End of middle row
                     rowLength = 0;
@@ -101,7 +76,7 @@ int main() {
             // Beginning of the cell
             if (cell[0] == SMALL_SIGN && cellIndex == 1 && tmp == SPACE) {
                 cellIndex = 0;
-                cell[cellIndex++] = tmp;
+                cell[cellIndex++] = tmp; // Set space as first element of cell
             } else { // Provide next elements into cell
                 cell[cellIndex++] = tmp;
             }
@@ -128,7 +103,7 @@ int main() {
             }
         }
 
-        if (!boardBeg) {
+        if (!boardBeg && haveCmd) {
             char **board = new char *[boardSize]; // Array which represents board
             for (int i = 0; i < boardSize; i++)
                 board[i] = new char[boardSize];
@@ -146,6 +121,7 @@ int main() {
             }
 
             handleCommands(board, visited, cmd, boardSize, redPawns, bluePawns);
+            haveCmd = false;
 
             for (int i = 0; i < boardSize; i++) {
                 delete board[i];

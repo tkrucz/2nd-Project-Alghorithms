@@ -41,4 +41,6 @@ void handleCommands(char **board, bool **visited, int &cmd, int &boardSize, int 
 
 bool checkPath(char **board, bool **visited, int boardSize, Position beginning); // DFS Check if there is winning path
 
+void getCommand(int &cmd); // Read the command
+
 #endif //HEX_2ND_PROJECT_GENERALFUNCTIONS_H
