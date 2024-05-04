@@ -39,7 +39,7 @@ void canWinNaiveOutput(char **board, bool **visited, int boardSize, int redPawns
 
 void handleCommands(char **board, bool **visited, int &cmd, int &boardSize, int &redPawns, int &bluePawns); // Evaluate command
 
-bool checkPath(char **board, bool **visited, int boardSize, Position beginning); // DFS Check if there is winning path
+bool checkPath(char **board, bool **visited, int boardSize, Position beginning); // DFS, check if there is winning path
 
 void getCommand(int &cmd); // Read the command
 

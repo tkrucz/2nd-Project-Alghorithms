@@ -188,7 +188,7 @@ bool canWinNaive(char **board, bool **visited, int boardSize, int redPawns, int 
         }
     }
 
-    if (emptyCell == 0) // No empty cell, no one can win in 1/2 move
+    if (emptyCell == 0) // No empty cell so no one can win in 1/2 move
         return false;
 
     if(redPawns == bluePawns){ // Red start

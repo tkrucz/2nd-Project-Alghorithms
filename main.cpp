@@ -26,11 +26,10 @@ int main() {
     // Read characters until end of input
     while ((tmp = getchar()) != EOF) {
         if (!inCell) {
-            // Check if symbol is starting a new cell
-            if (tmp == SMALL_SIGN) {
+            if (tmp == SMALL_SIGN) { // Symbol is beginning of a new cell
                 inCell = true;
                 cellIndex = 0;
-                cell[cellIndex++] = tmp; // Start building new cell
+                cell[cellIndex++] = tmp;
             } else if (tmp == MINUS) {
                 char next1 = getchar();
                 char next2 = getchar();
@@ -49,12 +48,12 @@ int main() {
                     }
                 } else if (next1 == MINUS && next2 == SMALL_SIGN) // Beginning of row
                     inCell = true;
-            } else if (tmp == GREATER_SIGN) {
+            } else if (tmp == GREATER_SIGN) { // End of cell
                 char next1 = getchar();
                 if (next1 == MINUS) {
                     char next2 = getchar();
-                    if (next2 == MINUS) {
-                        rowLength = 0; // End of row
+                    if (next2 == MINUS) { // End of row
+                        rowLength = 0;
                         rowCounter++;
                         yIndex = rowCounter;
                         if (endOfMiddleRow) {
@@ -72,17 +71,18 @@ int main() {
                     rowCounter++;
                 }
             }
-        } else {
-            // Beginning of the cell
-            if (cell[0] == SMALL_SIGN && cellIndex == 1 && tmp == SPACE) {
+        } else { // Beginning of the cell
+
+            if (cell[0] == SMALL_SIGN && cellIndex == 1 && tmp == SPACE) { // Case of first cell in row
                 cellIndex = 0;
-                cell[cellIndex++] = tmp; // Set space as first element of cell
+                cell[cellIndex++] = tmp;
             } else { // Provide next elements into cell
                 cell[cellIndex++] = tmp;
             }
-            if (cellIndex == CELL_SIZE) { // If cell contains 3 elements
 
-                if (cell[1] == BLUE_PAWN || cell[1] == RED_PAWN || cell[1] == SPACE) {
+            if (cellIndex == CELL_SIZE) { // Cell contains 3 elements
+
+                if (cell[1] == BLUE_PAWN || cell[1] == RED_PAWN || cell[1] == SPACE) { // Assign char into array
                     boardTmp[xIndex++][yIndex--] = cell[1];
 
                     inCell = false;
@@ -96,6 +96,7 @@ int main() {
                 } else {
                     inCell = false;
                 }
+
                 if (rowLength > boardSize)
                     boardSize = rowLength;
 
